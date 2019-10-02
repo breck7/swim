@@ -1,0 +1,28 @@
+aToStringMethod
+ arrange
+  hello
+   world
+ act
+ assert
+  hello
+   world
+aTotalLineCountMethod
+ arrange
+  hello
+   world
+ act
+ assert
+  2
+aToCsvMethod
+ arrange
+  0
+   team ne
+   score 3
+  1
+   team af
+   score 28
+ act
+ assert
+  team,score
+  ne,3
+  af,28

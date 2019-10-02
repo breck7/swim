@@ -1,0 +1,21 @@
+swimNode
+ description A language for writing tests without implementations that could be used by Tree Notation libraries.
+ root
+ inScope testNode
+keywordCell
+testNode
+ pattern Test$
+ inScope arrangeNode actNode assertNode
+ cells keywordCell
+anyCell
+ highlightScope string
+contentNode
+ catchAllCellType anyCell
+arrangeNode
+ catchAllNodeType contentNode
+ cells keywordCell
+actNode
+ cells keywordCell
+assertNode
+ catchAllNodeType contentNode
+ cells keywordCell

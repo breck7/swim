@@ -10,24 +10,57 @@ Although Tree Notation libraries should be designed to best meet the conventions
 
 The Swim project is meant to serve as a useful checklist when implmenting a new Tree Notation library, as well as a place to discover and share good conventions that are applicable across host languages. Not all libraries need to implement all tests.
 
-## Using
+## Suggested Guidelines for Writing a New implementation
+
+1. Keep a journal. Please document your process, particularly the annoying parts, so we can make it better! Bonus points for sharing your journal online.
+2. Focus on serving the users of your host language first. If your language differs in a significant way from other host languages, don't worry too much about making your library look like the other Tree Notation libraries. Serve your users first.
+
+## Suggested Usage of Swim
+
+### Step 1. Understand the Swim language:
 
 The general format of a swim file is as an array of tests, written like so:
 
-    descriptionOfATotalLineCountTestInCamelCase
+    aTotalLineCountTest
      arrange
-      the tree structure goes here
+      hello
+       world
      act
      assert
-      number 1
+      2
 
-Your library might run such a test suite in a manner similar to this pseudocode:
+The first line defines the name of the test. If a test fails, this generally is the title of the test your test runner would print.
 
-    tests = getSwimTests()
-    tests.descriptionOfATotalLineCountTestInCamelCase.act = tree => tree.length
-    tests.forEach(test => {
-      if !tests.act
-       skip # only run tests that you have defined the act steps for
-      tree = new tree(test.arrange)
-      assert test.act(tree) === test.assert
+The arrange node contains children that together form a string block that will be used as the setup for the test.
+
+The act node is what you fill in -- put your implementation code here.
+
+The assert node contains children that together from a string block that will contain the expected value of the test.
+
+### Step 2. Copy the swim file to your repo and fill in the "act" portion of the tests with your implementation:
+
+I added one line to the act node type in the example above with the TypeScript implementation (https://github.com/treenotation/jtree/blob/master/coreTests/core.swim):
+
+    aTotalLineCountTest
+     arrange
+      hello
+       world
+     act
+      new TreeNode(arrange).getNumberOfLines().toString()
+     assert
+      2
+
+### Step 3. Build a test runner:
+
+The Swim Test runner for the TypeScript/Javascript JTree implementation is short, only 23 lines of code, including setup code (https://github.com/treenotation/jtree/blob/master/coreTests/swim.test.ts). Here is the core piece:
+
+    // Arrange/Act/Assert
+    const tests = jtree.TreeNode.fromDisk(__dirname + "/core.swim")
+    tests.forEach((test: any) => {
+      const arrange = test.getNode("arrange").childrenToString()
+      const expected = test.getNode("assert").childrenToString()
+      const code = test.getNode("act").childrenToString()
+      equal(eval(code), expected, test.getLine())
     })
+
+Of course, the bulk of the work is in implementing a good Tree Notation library and not writing test runner code, but hopefully in your host language at least the runner code could be similarly short.

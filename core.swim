@@ -79,9 +79,7 @@ aFilterTest
   keep
  act
  assert
-  keep
-  keep
-  keep
+  3
 aFromJsonSubsetTest
  arrange
   {"message": {"hello": "world"}}
